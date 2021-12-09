@@ -1,0 +1,6 @@
+Tea
+Coffee
+Water
+Scone
+Toast
+Muffin
