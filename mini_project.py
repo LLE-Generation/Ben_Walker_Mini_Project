@@ -106,6 +106,27 @@ while True: # While loop that will display the main menu
                         print(list(enumerate(order_list)))
                         order_list_index = int(input("Please select order via index: "))
                         Customer_name = input("Please enter your name: ")
+
+                        if Customer_name == "":
+                            print("Invalid input!!")
+                            print(order_menu)
+                        else:
+                            order_list[order_list_index]["Customer Name"] = Customer_name
+
+                        Customer_address = input("Please enter your Address: ")
+                        if Customer_address == "":
+                            print("Invalid input!!")
+                            print(order_menu)
+                        else:
+                            order_list[order_list_index]["Customer Address"] = Customer_address
+
+                        Customer_phone_number = int(input("Please enter your phone number: "))
+                        if Customer_phone_number == "":
+                            print("Invalid input!!")
+                            print(order_menu)
+                        else:
+                            order_list[order_list_index]["Customer Phone Number"] = Customer_phone_number
+
                         order_list[order_list_index]["Customer Name"] = Customer_name
 
                         Customer_address = input("Please enter your Address: ")
@@ -113,6 +134,7 @@ while True: # While loop that will display the main menu
 
                         Customer_phone_number = int(input("Please enter your phone number: "))
                         order_list[order_list_index]["Customer Phone Number"] = Customer_phone_number
+
 
                         print(list(enumerate(courier_list)))
                         courier_index = int(input("Please select a courier via index: "))
@@ -137,4 +159,8 @@ while True: # While loop that will display the main menu
         print("An error has occurred!!!")
         break
 
+
 print("System Exit!!!")
+
+print("System Exit!!!")
+
