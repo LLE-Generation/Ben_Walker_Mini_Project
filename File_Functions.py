@@ -58,7 +58,6 @@ def add_to_dict(dict_name, list_name):
 def edit_list(list_name, dict_name):
     while True:
         try:
-            print(list(enumerate(list_name)))
             index = int(input("Index:<<< "))
             list_name[index] = dict_name
             break
@@ -84,4 +83,8 @@ def del_list_element(list_name):
             print("Please enter a valid input!!!")
             break
 
+# def print_list(list_name):
+#     print("\n")
+#     for lines in range(len(list_name)):
+#          print(list_name[lines])
 
