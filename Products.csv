@@ -1,10 +1,10 @@
-Product ID,Product,Price
-1,Tea,1.30
-2,Coffee,1.30
-3,Muffin,2.00
-4,Crisps,0.50
-5,Water,0.50
-6,Toast,0.60
-7,Chocolate Cake,2.50
-8,Soup,3.00
-9,Chips,1.40
+product_id,product_name,price
+2,Tea,1.00
+3,Coffee,1.00
+4,Cheese Toasty,1.50
+8,Tomato Soup,1.20
+9,Cheese Cake,2.00
+10,Hot Chocolate,1.00
+11,Pancakes,0.70
+12,Full English,4.50
+13,Special Omelette,1.20
