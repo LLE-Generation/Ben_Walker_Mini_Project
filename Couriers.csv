@@ -1,5 +1,7 @@
-Courier ID,Name,Phone Number
-1,Ben,07175919271
-2,Jamie,07451215711
-3,Sam,07719293759
-4,Kieran,07851259872
+courier_id,first_name,last_name,phone_number
+1,Ben,Walker,01484717273
+2,Jamie,Snelson,0123456789
+5,Daniel,Craig,01264243533
+6,James,Sharp,0734534242
+7,Jeyne,Fields,0366342345
+8,Emily,Smith,0246434234

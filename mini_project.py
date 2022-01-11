@@ -1,35 +1,19 @@
-import File_Functions 
+from logging import exception
+import File_Functions
 
-products_list = [] #function that imports products file into list and strips whitespace
-File_Functions.read_csv_file("products.csv", products_list)
-product_dict = {"Product ID": int(products_list[-1]["Product ID"]),
-                "Product": "None",
-                "Price": "0"}
 
-courier_list = [] #function that imports couriers file into list and strips whitespace
-File_Functions.read_csv_file("couriers.csv", courier_list)
-courier_dict = {"Courier ID": courier_list[-1]["Courier ID"],
-                "Name": "None",
-                "Phone Number": "00000000000"}
-
-order_list = []
-File_Functions.read_csv_file("Orders.csv", order_list)
-order_dict = {"Customer Name": "None",
-              "Customer Address": "None",
-              "Customer Phone Number": 00000000000,
-              "Courier": "None",
-              "Order Status": "Processing",
-              "Products": 0}
-
-Order_status = ["Processing", "Preparing", "Shipping", "Delivered"]
-    
 while True: # While loop that will display the main menu
     try:
-        main_menu = int(input("\nMain Menu\n3 - Order_Menu\n2 - Courier_Menu\n1 - Products_Menu\no - Exit\n<<< ")) #Main menu
+        main_menu = int(input("\nMain Menu\n4 - Customer Menu\n3 - Order_Menu\n2 - Courier_Menu\n1 - Products_Menu\no - Exit\n<<< ")) #Main menu
         if main_menu == 0: # closes the system if user enters the value 0
-            File_Functions.write_csv_file("products.csv", products_list) # function that writes list to file then closes file
-            File_Functions.write_csv_file("couriers.csv", courier_list) # function that writes list to file then closes file
-            File_Functions.write_csv_file("Orders.csv", order_list)
+            products = File_Functions.get_dict_data("select * from products")
+            File_Functions.write_csv_file("Products.csv", products)
+            couriers = File_Functions.get_dict_data("select * from couriers")
+            File_Functions.write_csv_file("Couriers.csv", couriers)
+            customers = File_Functions.get_dict_data("select * from customers")
+            File_Functions.write_csv_file("Customers.csv", customers)
+            orders = File_Functions.get_dict_data("select * from orders")
+            File_Functions.write_csv_file("Orders.csv", orders)
             break # breaks loop and ends program
         elif main_menu == 1: # moves on to the options menu if user enters the value 1
             while True: # while loop that displays the options menu
@@ -40,135 +24,137 @@ while True: # While loop that will display the main menu
                         break
 
                     elif products_menu == 1: # displays the users list if the user enters the value 1
-                        for dict in products_list:
-                            id = dict["Product ID"]
-                            name = dict["Product"]
-                            price = dict["Price"] 
-                            print("ID: {}: {}: £{} ".format(id, name, price))
+                        File_Functions.print_products()
 
                     elif products_menu == 2: # while loop that allows user to add product
                         while True:    
                             try:
-                                product = input("Please enter product name: ").title()
+                                product = input("\n\n\nPlease enter product name: ").title()
                                 if product == "":
                                     print("Invalid product name")
                                     break                                    
-                                price = float(input("Please enter the products price: "))
+                                price = float(input("\n\n\nPlease enter the products price: "))
                                 if type(price) is not float:
                                     print("Invalid input!")
                                     break
                                 else:
                                     float_price = "{:.2f}".format(price)
-
-                                product_dict["Product ID"] +=1
-                                product_dict["Product"] = product
-                                product_dict["Price"] = float_price 
-                                products_list.append(product_dict)
-
+                                File_Functions.add_product(product, price)
                                 break
                             except Exception as e:
                                 print(f"An error occured \n{e}")
                                 break
 
                     elif products_menu == 3: # while loop that allows user to edit list via index
-                        while True:    
+                        while True:
                             try:
-                                print(list(enumerate(products_list)))
-                                index = int(input("Index:<<< "))
-                                product = input("Please enter product name: ").title()
-                                if product == "":
-                                    pass
-                                else: 
-                                    products_list[index]["Product"] = product
-
-                                price = float(input("Please enter the products price: "))
+                                id = int(input("\n\n\nID:<<< "))
+                                if not id:
+                                    print("Product ID required!!!")
+                                    break
+                                product = input("\n\n\nPlease enter product name: ").title()
+                                price = float(input("\n\n\nPlease enter the products price: "))
                                 float_price = "{:.2f}".format(price)
-                                if type(price) is not float:
-                                    pass
-                                else:
-                                    products_list[index]["Price"] = float_price
-                                break
-                            except IndexError:
-                                print("Invalid index!!!")
+                                File_Functions.edit_product(id, product, float_price)
                                 break
                             except ValueError:
+                                print("An error ocurred!!!")
                                 break
-                            except Exception as e:
-                                print("An error occured!!! {e}")
-                                break
-
+                        
                     elif products_menu == 4: # while loop that allows user to delete product
-                        File_Functions.del_list_element(products_list)
-                    else:
-                        print("\nInvalid input!")
-                
-                except ValueError as e:
-                    print("Please enter a valid number!")
+                        while True:
+                            try:
+                                File_Functions.print_products()
+                                id = int(input("\n\n\nPlease enter product ID to delete: "))
+                                if not id:
+                                    print("\n\n\nProduct ID required!!!")
+                                    break
+                                File_Functions.delete_product(id)
+                                break
+                            except exception as e:
+                                print("An error occured!!")
+                                break
+                except exception:
+                    break
 
         elif main_menu == 2: # moves on to the Courier menu if user enters the value 2
             while True: # while loop that displays the courier menu
                 try:
-                    courier_menu = int(input(("\nCourier_Menu\n-----------------\n4 - Delete_Courier\n3 - Edit_Courier\n2 - Add_Courier\n1 - Show_Couriers\n0 - Main_Menu\n<<< ")))
+                    courier_menu = int(input(("\n\n\n\nCourier_Menu\n-----------------\n4 - Delete_Courier\n3 - Edit_Courier\n2 - Add_Courier\n1 - Show_Couriers\n0 - Main_Menu\n<<< ")))
                     if courier_menu == 0: # returns to main menu if user enters the value 0
                         break
                     
                     elif courier_menu == 1: # displays the courier list 
-                        for dict in courier_list:
-                            id = dict["Courier ID"]
-                            name = dict["Name"]
-                            phone_number = dict["Phone Number"] 
-                            print("ID: {}: {}: {} ".format(id, name, phone_number))
+                        File_Functions.print_couriers()
                     
                     elif courier_menu == 2: # add to courier list
                         while True:   
                             try:
-                                courier_name = input("Please enter courier name: ").title()
-                                if courier_name == "":
-                                    print("Invalid name")
+                                first_name = input("\n\n\nCourier first name: ").title()
+                                if not first_name:
+                                    print("First name required!!!")
                                     break
-                                phone_number = input(int("Please enter the couriers phone number: "))
-                                if len(phone_number) is not 11:
-                                    print("Invalid phone number")
+                                last_name = input("\n\n\nCourier last name: ").title()
+                                if not last_name:
+                                    print("First name required!!!")
                                     break
-                                courier_dict = {"Name": courier_name,
-                                "Phone Number": phone_number}
-
-                                courier_list.append(courier_dict)
-                            except Exception as e:
-                                print("{e}")
+                                try:
+                                    phone_number = input("\n\n\nCourier phone number: ")
+                                    if not int(phone_number):
+                                        print("Invalid phone number")
+                                        break
+                                    if len(phone_number) not in range(8, 12):                         
+                                        print("Invalid phone number!!!")
+                                        break
+                                except ValueError:
+                                    print("Invalid phone number!!!")
+                                    break
+                                else:    
+                                    File_Functions.add_courier(first_name, last_name, phone_number)
+                                    break
+                            except ValueError:
+                                print("Invalid input!!")
                                 break
-                            break
                     
                     elif courier_menu == 3: # while loop that allows user to edit list via index 
                         while True:    
                             try:
-                                print(list(enumerate(courier_list)))
-                                index = int(input("Index:<<< "))
-                                courier_name = input("Please enter courier name: ").title()
-                                if courier_name == "":
-                                    pass
-                                else: 
-                                    courier_list[index]["Name"] = courier_name
-
-                                phone_number = int(input("Please enter the couriers phone number: "))
-                                if len(phone_number) is not 11:
-                                    pass
-                                else:
-                                    courier_list[index]["Phone Number"] = phone_number
+                                id = int(input("\n\n\nID:<<< "))
+                                if not id:
+                                    print("Courier ID required!!!")
+                                    break
+                                first_name = input("\n\n\nCourier first name: ").title()
+                                last_name = input("\n\n\nCourier last name: ").title()
+                                try:
+                                    phone_number = input("\n\n\nCourier phone number")
+                                    if len(phone_number) not in range(8, 14):
+                                        phone_number = ""
+                                    if not int(phone_number):
+                                        phone_number = ""
+                                except ValueError:
+                                    phone_number = ""
+                                File_Functions.edit_courier(id, first_name, last_name, phone_number)
                                 break
                             except IndexError:
                                 print("Invalid index!!!")
                                 break
                             except ValueError:
+                                print("Invalid input")
                                 break
-                            except Exception:
-                                print("An error occured!!!")
+                            except Exception as e:
+                                print(f"An error occured!!! {e}")
                                 break
                     
                     elif courier_menu == 4: # while loop that allows user to delete courier
-                        File_Functions.del_list_element(courier_list)
-                    else:
-                        print("\nInvalid input!")
+                        try:
+                            File_Functions.print_couriers()
+                            id = int(input("\n\n\nPlease enter courier ID to delete: "))
+                            File_Functions.delete_courier(id)
+                        except ValueError:
+                            pass
+                        except TypeError:
+                            pass
+                        
                 
                 except ValueError as e:
                     print("Please enter a valid number!")
@@ -176,141 +162,159 @@ while True: # While loop that will display the main menu
         elif main_menu == 3:
             while True:
                 try:
-                    order_menu = int(input("\nOrder_menu\n----------------------\n5 - Delete_Order\n4 - Update_Order\n3 - Update_Order_Status\n2 - Add_User_Details\n1 - Print_Orders\n0 - Main_Menu\n<<< "))
+                    order_menu = int(input("\n\n\n\nOrder_menu\n----------------------\n5 - Delete_Order\n4 - Update_Order\n3 - Update_Order_Status\n2 - Add_User_Details\n1 - Print_Orders\n0 - Main_Menu\n<<< "))
                     if order_menu == 0:
                         break
                     elif order_menu == 1:
-                        for dict in order_list:
-                            name = dict["Customer Name"]
-                            address = dict["Customer Address"] 
-                            phone_number = dict["Customer Phone Number"]
-                            Courier = dict["Courier"]
-                            status = dict["Order Status"]
-                            products = dict["Products"]
-                            print("{}: {}: {}: {}: {}: {} ".format(name, address, phone_number, Courier, status, products))
+                        File_Functions.print_orders()
+                        
                     elif order_menu == 2:
                         while True:
                             try:
-                                Customer_name = input("Please enter your name: ").title()
-                                if Customer_name == "":
-                                    print("Invalid name!!")
+                                File_Functions.print_customers()
+                                customer_id = int(input("\n\n\nCustomer_id<<<"))
+                                if not customer_id:
+                                    print("\n\n\nCustomer ID required!!!")
                                     break
-                                order_dict["Customer Name"] = Customer_name
-                                Customer_address = input("Please enter your Address: ")
-                                if Customer_address == "":
-                                    print("Invalid address")
+                                File_Functions.print_couriers()
+                                courier_id = int(input("\n\n\nCourier id"))
+                                if not customer_id:
+                                    print("Customer ID required!!!")
                                     break
-                                order_dict["Customer Address"] = Customer_address
-
-                                Customer_phone_number = int(input("Please enter your phone number: "))
-                                if len(str(Customer_phone_number)) != 10:
-                                    print("Invalid Phone number!!!")
+                                File_Functions.print_products()
+                                product_list = list(map(int, input("\n\n\nProduct ID <<<").split(",")))
+                                if not product_list:
+                                    print("Product ID required!!!")
                                     break
-                                order_dict["Customer Phone Number"] = Customer_phone_number
 
-                                print(list(enumerate(products_list)))
-                                items_list = list(map(int, input().split(",")))
-                                indexed_list = []
-                                for num in items_list:
-                                    try:
-                                        if products_list[num]:
-                                            indexed_list.append(num)
-                                            order_dict["Products"] = indexed_list
-                                        else:
-                                            pass
-                                    except IndexError:
-                                        pass
-                                    except Exception:
-                                        print("An error occured!!!")
-                                        break
-
-                                print(list(enumerate(courier_list)))
-                                courier_index = int(input("Please select a courier via index: "))
-                                order_dict["Courier"] = courier_list[courier_index]
-
-                                order_dict["Order Status"] = ["Preparing"]
-                                order_list.append(order_dict)
+                                File_Functions.add_orders(customer_id, courier_id, product_list)
                                 break
                             except ValueError:
                                 print("Incorrect input!!!")
                                 break
-                            except IndexError:
-                                print("Invalid index!!!")
+                            except IndexError as e:
+                                print(f"Invalid index!!! {e}")
                                 break
                     elif order_menu == 3:
                         while True:
-                            try:
-                                print(list(enumerate(order_list)))
-                                order_list_index = int(input("Please select order via index: "))
-                                print(list(enumerate(Order_status)))
-                                Order_status_index = int(input("Please update order status via index: "))
-                                order_list[order_list_index]["Order Status"] = Order_status[Order_status_index]
-                                break
-                            except IndexError:
-                                print("Invalid index!!")
-                                break
-
+                            File_Functions.print_orders()
+                            order_id = int(input("Order id <<< "))
+                            File_Functions.execute_query("\n\n\nUpdate orders set order_status = %s where order_id = %s", ("Preparing", order_id))
+                            break
                     elif order_menu == 4:
                         while True:
                             try:
-                                print(list(enumerate(order_list)))
-                                order_list_index = int(input("Please select order via index: "))
+                                File_Functions.print_orders()
+                                order_id = int(input("\n\n\nOrder id<<<"))
+                                if not order_id:
+                                    print("\n\n\nOrder id required!!!")
+                                    break
+                                File_Functions.print_customers()
+                                customer_id = int(input("\n\n\nCustomer_id<<<"))
 
-                                Customer_name = input("Please enter your name: ").title()
-                                if Customer_name == "":
-                                    pass
-                                else:
-                                    order_list[order_list_index]["Customer Name"] = Customer_name
+                                File_Functions.print_couriers()
+                                courier_id = int(input("\n\n\nCourier id"))
 
-                                Customer_address = input("Please enter your Address: ")
-                                if not Customer_address:
-                                    pass
-                                else:
-                                    order_list[order_list_index]["Customer Address"] = Customer_address
-                                while True:
-                                    try:
-                                        Customer_phone_number = int(input("Please enter your phone number: "))
-                                        order_list[order_list_index]["Customer Phone Number"] = Customer_phone_number
-                                    except ValueError:
-                                        break
+                                File_Functions.print_products()
+                                product_id = int(input("\n\n\nProduct id<<"))
 
-                                print(list(enumerate(products_list)))
-                                try:
-                                    items_list = list(map(int, input().split(",")))
-                                    indexed_list = []
-                                    for num in items_list:
-                                        if products_list[num]:
-                                            indexed_list.append(num)
-                                            order_dict["Products"] = indexed_list
-                                    else:
-                                        pass
-                                except IndexError:
-                                    pass
-                                except Exception:
-                                    pass
 
-                                print(list(enumerate(courier_list)))
-                                while True:
-                                    try:
-                                        courier_index = int(input("Please select a courier via index: "))
-                                        order_list[order_list_index]["Courier"] = courier_list[courier_index]                                      
-                                        break
-                                    except Exception:
-                                        break
-                                order_list[order_list_index]["Order Status"] = ["Preparing"]
+                                File_Functions.edit_orders(order_id, customer_id, courier_id, product_id)
                                 break
-                            except Exception as e:
-                                print(f"An error occurred!! {e}")
+                            except ValueError:
+                                print("Invalid input!!!")
                                 break
-                           
 
                     elif order_menu == 5:
-                        File_Functions.del_list_element(order_list)
+                        order_id = int(input("\n\n\nOrder id<<< "))
+                        File_Functions.delete_order(order_id)
 
                 except IndexError as e:
-                    print("Invalid index!!")
+                    print(f"Invalid index!! {e}")
                 except ValueError as e:
                     print("Please enter a valid number!")
+        
+        elif main_menu == 4:
+            while True:
+                try:
+                    customer_menu = int(input(("\\n\n\nnCustomer_Menu\n-----------------\n4 - Delete User\n3 - Edit User\n2 - Create user\n1 - Show_Customers\n0 - Main_Menu\n<<< ")))
+                    if customer_menu == 0:
+                        break
+                    elif customer_menu == 1:
+                        File_Functions.print_customers()
+                    elif customer_menu == 2:
+                        while True:
+                            try:
+                                first_name = input("\n\n\nEnter your first name: ").title()
+                                if not first_name:
+                                    print("First name required!!!")
+                                    break
+                                last_name = input("\n\n\nEnter your last name: ").title()
+                                if not last_name:
+                                    print("Last name required!!!")
+                                    break
+                                phone_number = input("\n\n\nEnter your phone number: ")
+                                if len(phone_number) not in range(8,12):
+                                    print("Invalid phone number!!!")
+                                    break
+                                if not int(phone_number):
+                                    print("Invalid phone number!!!")
+                                    break
+                                street_town = input("\n\n\nEnter your street and town names: ").title()
+                                if not street_town:
+                                    print ("Street name and town required!!!")
+                                    break
+                                postcode = input("\n\n\nEnter your postcode: ").upper()
+                                if not postcode:
+                                    print("Postcode required!!!")
+                                    break
+                                File_Functions.add_customer(first_name, last_name, phone_number, street_town, postcode)
+                                break
+                            except ValueError:
+                                print("Invalid input!!!")
+                                break
+                    elif customer_menu == 3:
+                        while True:
+                            try:
+                                File_Functions.print_customers()
+                                customer_id = int(input("\n\n\nEnter your customer ID: "))
+                                if not customer_id:
+                                    print("Customer ID required!!!")
+                                    break
+                                first_name = input("\n\n\nEnter your first name: ").title()
+                                last_name = input("\n\n\nEnter your last name: ").title()
+                                try:
+                                    phone_number = input("\n\n\nEnter your phone number: ")
+                                    if len(phone_number) not in range(8,12):
+                                        phone_number = ""
+                                    if not int(phone_number):
+                                        phone_number = ""
+                                except ValueError:
+                                    phone_number = ""       
+                                street_town = input("\n\n\nEnter your street and town names: ").title()
+                                postcode = input("\n\n\nEnter your postcode: ").upper()
+                                File_Functions.edit_customer(customer_id, first_name, last_name, phone_number, street_town, postcode)
+                                break
+                            except ValueError:
+                                print("Invalid input!!!")
+                                break
+                    elif customer_menu == 4:
+                        File_Functions.print_customers()
+                        while True:
+                            try:
+                                customer_id = int(input("\n\n\nEnter your customer ID: "))
+                                if not customer_id:
+                                    print("Customer ID required!!!")
+                                    break
+                                File_Functions.delete_customer(customer_id)
+                                break
+                            except ValueError:
+                                print("Invalid input!!!")
+                                break
+                except exception as e:
+                    print(f"An error ocurred!! {e}")
+                    break
+
         else:
             print("\nInvalid input!")
     
@@ -322,3 +326,4 @@ while True: # While loop that will display the main menu
         break
 
 print("System Exit!!!")
+
