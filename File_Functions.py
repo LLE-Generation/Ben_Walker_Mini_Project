@@ -52,7 +52,7 @@ def edit_product(id: int, product: str, price: float):
     else:
         execute_query("UPDATE products SET product_name = %s WHERE product_id = %s", (product, id))
 
-    if price is not type(float):
+    if price:
         execute_query("UPDATE products SET price = %s WHERE product_id = %s", (price, id))
     else:
         pass
@@ -131,7 +131,7 @@ def delete_customer(id: int):
         print("An error ocurred")
 
 def print_orders():
-    orders = get_data("select o.order_id, c.customer_id, c.first_name, c.last_name, o.courier_id, o.product_id, o.order_status from orders o inner join customers c on o.customer_id=c.customer_id")
+    orders = get_data("select o.order_id, c.customer_id, c.first_name, c.last_name, o.courier_id, o.product_id, o.order_status from orders o inner join customers c on o.customer_id=c.customer_id order by o.order_id")
     for row in orders:
         print(f'Order ID: {row[0]} Customer ID: {row[1]}: {row[2]} {row[3]}: Courier ID: {row[4]} Product ID: {row[5]} Status: {row[6]}')
 
@@ -141,14 +141,9 @@ def add_orders(customer_id: int, courier_id: int, product_id: int):
         sql = f"insert into orders (customer_id, courier_id, product_id, order_status) values ('{customer_id}','{courier_id}','{row}','{order_status}')"
         execute_query(sql)
 
-def edit_orders(order_id: int, customer_id: int, courier_id:int, product_id:int):
+def edit_orders(order_id: int, courier_id:int, product_id:int):
     order_status = "Processing"     
-    if customer_id:
-        execute_query("UPDATE orders SET customer_id = %s, order_status = %s WHERE order_id = %s", (customer_id, order_status, order_id))
-    else:
-        pass
-
-    if courier_id:
+    if courier_id: 
         execute_query("UPDATE orders SET courier_id = %s, order_status = %s WHERE order_id = %s", (courier_id, order_status, order_id))
     else:
         pass
