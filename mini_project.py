@@ -96,7 +96,7 @@ while True: # While loop that will display the main menu
                                     break
                                 last_name = input("\n\n\nCourier last name: ").title()
                                 if not last_name:
-                                    print("First name required!!!")
+                                    print("Last name required!!!")
                                     break
                                 try:
                                     phone_number = input("\n\n\nCourier phone number: ")
@@ -162,27 +162,43 @@ while True: # While loop that will display the main menu
         elif main_menu == 3:
             while True:
                 try:
-                    order_menu = int(input("\n\n\n\nOrder_menu\n----------------------\n5 - Delete_Order\n4 - Update_Order\n3 - Update_Order_Status\n2 - Add_User_Details\n1 - Print_Orders\n0 - Main_Menu\n<<< "))
+                    order_menu = int(input("\n\n\n\nOrder_menu\n----------------------\n5 - Delete_Order\n4 - Update_Order\n3 - Confirm_order\n2 - Add_User_Details\n1 - Print_Orders\n0 - Main_Menu\n<<< "))
                     if order_menu == 0:
                         break
                     elif order_menu == 1:
                         File_Functions.print_orders()
+                        while True:
+                            try:
+                                list_orders = int(input("\n\n\n3 - List oders by order status.\n2 - List orders by courier.\n1 - List orders by customer.\n0 - Exit\n\n\n"))
+                                if list_orders == 0:
+                                    break
+                                elif list_orders == 1:
+                                    File_Functions.print_orders_by_customer()
+                                elif list_orders == 2:
+                                    File_Functions.print_orders_by_courier()
+                                elif list_orders == 3:
+                                    File_Functions.print_orders_by_status()
+                                else:
+                                    break
+                            except ValueError:
+                                print("Invalid input!!!")
+                                break
                         
                     elif order_menu == 2:
                         while True:
                             try:
                                 File_Functions.print_customers()
-                                customer_id = int(input("\n\n\nCustomer_id<<<"))
+                                customer_id = int(input("\n\n\nCustomer_id <<< "))
                                 if not customer_id:
                                     print("\n\n\nCustomer ID required!!!")
                                     break
                                 File_Functions.print_couriers()
-                                courier_id = int(input("\n\n\nCourier id"))
+                                courier_id = int(input("\n\n\nCourier id <<< "))
                                 if not customer_id:
                                     print("Customer ID required!!!")
                                     break
                                 File_Functions.print_products()
-                                product_list = list(map(int, input("\n\n\nProduct ID <<<").split(",")))
+                                product_list = list(map(int, input("\n\n\nProduct ID <<< ").split(",")))
                                 if not product_list:
                                     print("Product ID required!!!")
                                     break
@@ -205,18 +221,18 @@ while True: # While loop that will display the main menu
                         while True:
                             try:
                                 File_Functions.print_orders()
-                                order_id = int(input("\n\n\nOrder id<<<"))
+                                order_id = int(input("\n\n\nOrder id <<< "))
                                 if not order_id:
                                     print("\n\n\nOrder id required!!!")
                                     break
                                 File_Functions.print_customers()
-                                customer_id = int(input("\n\n\nCustomer_id<<<"))
+                                customer_id = int(input("\n\n\nCustomer_id <<< "))
 
                                 File_Functions.print_couriers()
-                                courier_id = int(input("\n\n\nCourier id"))
+                                courier_id = int(input("\n\n\nCourier id <<< "))
 
                                 File_Functions.print_products()
-                                product_id = int(input("\n\n\nProduct id<<"))
+                                product_id = int(input("\n\n\nProduct id <<< "))
 
 
                                 File_Functions.edit_orders(order_id, customer_id, courier_id, product_id)
@@ -226,7 +242,7 @@ while True: # While loop that will display the main menu
                                 break
 
                     elif order_menu == 5:
-                        order_id = int(input("\n\n\nOrder id<<< "))
+                        order_id = int(input("\n\n\nOrder id <<< "))
                         File_Functions.delete_order(order_id)
 
                 except IndexError as e:

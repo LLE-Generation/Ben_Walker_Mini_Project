@@ -32,6 +32,7 @@ def execute_query(*sql):
     
     return rows
 
+
 def get_data(sql):
     data = execute_query(sql)
     return data
@@ -130,9 +131,9 @@ def delete_customer(id: int):
         print("An error ocurred")
 
 def print_orders():
-    orders = get_data("SELECT * from orders")
+    orders = get_data("select o.order_id, c.customer_id, c.first_name, c.last_name, o.courier_id, o.product_id, o.order_status from orders o inner join customers c on o.customer_id=c.customer_id")
     for row in orders:
-        print(f'Order ID: {row[0]} Customer ID: {row[1]} Courier ID: {row[2]} Product ID: {row[3]} Status: {row[4]}')
+        print(f'Order ID: {row[0]} Customer ID: {row[1]}: {row[2]} {row[3]}: Courier ID: {row[4]} Product ID: {row[5]} Status: {row[6]}')
 
 def add_orders(customer_id: int, courier_id: int, product_id: int):
     order_status = "Processing"
@@ -201,5 +202,18 @@ def get_dict_data(sql):
     data = execute_dict_query(sql)
     return data
 
+def print_orders_by_courier():
+    orders = get_data("select o.order_id, c.customer_id, c.first_name, c.last_name, o.courier_id, o.product_id, o.order_status from orders o inner join customers c on o.customer_id=c.customer_id order by courier_id asc")
+    for row in orders:
+        print(f'Order ID: {row[0]} Customer ID: {row[1]}: {row[2]} {row[3]}: Courier ID: {row[4]} Product ID: {row[5]} Status: {row[6]}')
 
+def print_orders_by_customer():
+    orders = get_data("select o.order_id, c.customer_id, c.first_name, c.last_name, o.courier_id, o.product_id, o.order_status from orders o inner join customers c on o.customer_id=c.customer_id order by customer_id asc")
+    for row in orders:
+        print(f'Order ID: {row[0]} Customer ID: {row[1]}: {row[2]} {row[3]}: Courier ID: {row[4]} Product ID: {row[5]} Status: {row[6]}')
+
+def print_orders_by_status():
+    orders = get_data("select o.order_id, c.customer_id, c.first_name, c.last_name, o.courier_id, o.product_id, o.order_status from orders o inner join customers c on o.customer_id=c.customer_id order by order_status asc")
+    for row in orders:
+        print(f'Order ID: {row[0]} Customer ID: {row[1]}: {row[2]} {row[3]}: Courier ID: {row[4]} Product ID: {row[5]} Status: {row[6]}')
 
